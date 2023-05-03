@@ -1,4 +1,5 @@
 const express = require('express')
+const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 
 // 加入這段 code, 僅在非正式環境時, 使用 dotenv
@@ -7,6 +8,10 @@ if (process.env.NODE_ENV !== 'production') {
 }
 const app = express()
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
+app.set('view engine', 'hbs')
+
 
 const db = mongoose.connection
 
@@ -19,7 +24,7 @@ db.once('open', () => {
 })
 
 app.get('/', (req, res) => {
-  res.send('hello world')
+  res.render('index')
 })
 
 app.listen(3000, () => {
